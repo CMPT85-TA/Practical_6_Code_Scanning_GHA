@@ -39,22 +39,14 @@ if __name__ == "__main__":
     # run_untrusted_code("__import__('os').system('echo hi')")
     # run_shell_command("ls -la")
 
-# -------------------------------------------------------------
-# Demo secrets below (FAKE values) to trigger secret scanners.
-# These are NOT real credentials and exist only for demonstrations.
-# -------------------------------------------------------------
 
-# Typical patterns secret scanners look for:
-# - AWS access keys (AKIA + 16 alphanumerics)
-# - AWS secret access keys (40 chars)
-# - GitHub personal access tokens (ghp_ + 36+ chars)
 
-# FAKE demo AWS credentials (do not use in real environments)
-DEMO_AWS_ACCESS_KEY_ID = "AKIADEMODEMODEMODEMO"
-DEMO_AWS_SECRET_ACCESS_KEY = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+# Not used demo Azure credentials (do not use in real environments)
+DEMO_AZURE_CLIENT_ID = "b78186dd-32ca-4dcb-8aba-c65f47cd0104"
+DEMO_AZURE_CLIENT_SECRET = "JAj8Q~uILxPmXZ5iMaOsFbJ.62Mtv_RzOOsepdbZ"
 
 # FAKE demo GitHub token (pattern only)
-DEMO_GITHUB_TOKEN = "ghp_DEM0DEMOdemodemodemodemodemodemode"
+DEMO_GITHUB_TOKEN = "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"
 
 
 def print_demo_secrets():
