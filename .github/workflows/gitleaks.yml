@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Run Gitleaks
-        uses: zricethezav/gitleaks@v8
+        uses: zricethezav/gitleaks@v8.18.2
         with:
           args: detect --report-path=gitleaks-report.json
       - name: Upload report

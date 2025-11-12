@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          repository: CMPT85-TA/Practical_6_Code_Scanning_GHA  # Make sure this value is valid
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
         with:
