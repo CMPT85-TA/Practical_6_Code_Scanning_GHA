@@ -11,6 +11,9 @@ Files added:
 - `.github/workflows/bandit.yml` — example workflow to run Bandit
 - `.github/workflows/gitleaks.yml` — example workflow to run Gitleaks
 - `.github/workflows/codeql.yml` — example workflow to run CodeQL
+- `.github/workflows/coverity.yml` — example workflow to run Coverity analysis on C samples
+- `c_examples/demo.c` — intentionally unsafe C code for static-analysis demos
+- `c_examples/Makefile` — minimal build instructions for the C demo
 
 ## Enable GitHub Secret Scanning and Push Protection
 
@@ -48,3 +51,35 @@ Notes:
 
 - The vulnerable examples are intentionally dangerous. Do not run `run_untrusted_code` on untrusted input.
 - The CI workflows are example templates — you should review and adapt them for your repository and policies.
+
+## SonarQube Cloud integration
+
+Connecting SonarQube Cloud (SonarCloud) to GitHub mirrors the flow shown in the screenshots above and only takes a few clicks.
+
+### Integration steps
+
+1. Sign up at [sonarcloud.io](https://sonarcloud.io) using your GitHub account for a one-click registration.
+2. When prompted, import an organization from GitHub or create one manually to match your GitHub workspace. The first image shows the GitHub App consent screen you will confirm here.
+3. Install the SonarQube Cloud GitHub App for either **All repositories** or the specific repositories you want to scan.
+4. Pick the plan that fits (free tier works for public projects); private repositories require the paid plan after the trial, as noted in the second image.
+
+### Analysis steps
+
+1. Select the repository you want to analyze and click **Set Up**. With automatic analysis enabled, there is no need to commit workflow files before you see results.
+2. Define the New Code Definition (NCD) so Sonar focuses on recent changes—this fuels the “Clean as You Code” dashboard and keeps developers looking at the latest deltas.
+3. Automatic analysis triggers immediately. SonarQube Cloud ingests the default branch, evaluates reliability, security, maintainability, and other quality measures, and updates the dashboard like the third screenshot.
+4. Review findings under **Issues**, **Security Hotspots**, and **Measures**. Pull request decoration happens automatically once the GitHub App is installed, so future PRs show quality gates without extra configuration.
+
+If you later want to run custom rules or on-premise scans, you can still add a `sonar-project.properties` file and use the `sonar-scanner` CLI or the `sonarsource/sonarcloud-github-action`. For the default classroom scenario, the GitHub App-driven automatic analysis is enough to start reviewing code quality within minutes.
+
+## Coverity demo
+
+Static analyzers such as Coverity can consume C and C++ examples in addition to Python. The repository now includes a vulnerable C sample under `c_examples/demo.c` and a Makefile that builds it with `make -C c_examples demo`.
+
+- The code intentionally concatenates user-controlled input into a fixed buffer, triggering buffer overflow findings in Coverity, SonarQube, and other analyzers.
+- The workflow `.github/workflows/coverity.yml` captures the build with `cov-build`, analyzes the intermediate directory, and submits results to a Coverity Connect server.
+- Required GitHub secrets: `COVERITY_DOWNLOAD_URL` (pre-authenticated URL for the Coverity Analysis CLI), `COVERITY_URL`, `COVERITY_STREAM`, `COVERITY_USER`, and `COVERITY_PASSPHRASE`.
+- Provide `cov-analysis` via the download URL once per cache key; subsequent runs reuse the cached installation to stay within runner time limits.
+- If you add more compiled targets, update the Makefile and adjust the `cov-build` command.
+
+Run `make -C c_examples clean` to remove the compiled binary after local experiments.
